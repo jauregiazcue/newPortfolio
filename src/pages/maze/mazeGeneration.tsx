@@ -11,6 +11,7 @@ import { wilsonsMaze } from "./mazeUtils/wilsons";
 class Maze {
   constructor() {
     this.size = 10;
+    this.rectangleSize = 11;
   }
 
   init(type: GenType, size?: number) {
@@ -73,27 +74,23 @@ class Maze {
   draw(ctx: CanvasRenderingContext2D) {
     const canvas = ctx.canvas;
     const width = canvas.width;
-    const height = canvas.height;
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, width, height);
 
     if (this.maze.length <= 0) return;
 
-    const rectangleSize = 11;
-    const rectWidth = (width / rectangleSize);
-    const rectHeight = (width / rectangleSize);
+    const rectWidth = (width / this.rectangleSize);
+    const rectHeight = (width / this.rectangleSize);
 
-    ctx.fillStyle = "#cac8b9";
+    const startX = this.rectangleSize * (this.stepX);
+    const startY = this.rectangleSize * (this.stepY);
 
-    const startX = rectangleSize * (this.stepX);
-    const startY = rectangleSize * (this.stepY);
-
-    let endX = rectangleSize * (this.stepX + 1);
+    let endX = this.rectangleSize * (this.stepX + 1);
     if (endX >= this.maze.length) endX = this.maze.length;
 
-    let endY = rectangleSize * (this.stepY + 1);
+    let endY = this.rectangleSize * (this.stepY + 1);
     if (endY >= this.maze.length) endY = this.maze.length;
-
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, width, width);
+    ctx.fillStyle = "#cac8b9";
     let fakeX = 0;
     let fakeY = 0;
     for (let y = startY; y < endY; y++) {
@@ -127,12 +124,14 @@ class Maze {
   handleStepXInputChange(add: number, ctx: CanvasRenderingContext2D) {
     this.stepX += add;
     if (this.stepX < 0) this.stepX = 0;
+    if(this.rectangleSize * (this.stepX) >= this.maze.length) this.stepX--;
     this.draw(ctx);
   }
 
   handleStepYInputChange(add: number, ctx: CanvasRenderingContext2D) {
     this.stepY += add;
     if (this.stepY < 0) this.stepY = 0;
+    if(this.rectangleSize * (this.stepY) >= this.maze.length) this.stepY--;
     this.draw(ctx);
   }
 
@@ -152,6 +151,7 @@ class Maze {
     this.jsonString = jsonAuxString;
   }
 
+  rectangleSize: number;
   stepX: number = 0;
   stepY: number = 0;
   size: number = 10;

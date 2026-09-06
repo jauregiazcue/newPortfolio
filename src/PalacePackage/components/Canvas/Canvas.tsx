@@ -19,9 +19,6 @@ function Canvas(props: CanvasPayload) {
     }
   });
 
-
-
-
   return <div>
     <canvas ref={ref} width={width} height={height} />
   </div>;
